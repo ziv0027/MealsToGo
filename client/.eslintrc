@@ -1,0 +1,26 @@
+{
+    "parser": "@babel/eslint-parser",
+    "extends": [
+      "@react-native-community",
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "plugin:react-native/all"
+    ],
+    "plugins": ["react", "react-native"],
+    "env": {
+      "browser": true,
+      "es2021": true
+    },
+    "parserOptions": {
+      "requireConfigFile": false,  // Necessary for Babel parsing
+      "babelOptions": {
+        "presets": ["@babel/preset-react"]
+      },
+      "ecmaVersion": 12,
+      "sourceType": "module"
+    },
+    "rules": {
+        "quotes": [2, "double", {"avoidEscape": true}]
+    }
+  }
+  
