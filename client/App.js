@@ -1,45 +1,32 @@
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { Text } from "react-native";
-import RestaurantsScreen from "./src/features/restaurants/screens/restaurants.screen";
+import { useState, useEffect } from "react";
 import { ThemeProvider } from "styled-components/native";
 import { theme } from "./src/infrastructure/theme";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   useFonts as useOswald,
   Oswald_400Regular,
 } from "@expo-google-fonts/oswald";
 import { useFonts as useLato, Lato_400Regular } from "@expo-google-fonts/lato";
-import { SafeArea } from "./src/components/utility/safe-area.component";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { AuthenticationContextProvider } from "./src/services/authentication/authentication.context";
+import { Navigation } from "./src/infrastructure/navigation";
+import { initializeApp, getApps } from "firebase/app";
+import { getAuth } from "firebase/auth";
 
-const Tab = createBottomTabNavigator();
-
-const TAB_ICON = {
-  Restaurants: "restaurant",
-  Map: "map",
-  Settings: "settings",
+const firebaseConfig = {
+  apiKey: "AIzaSyDipUBA9RNCNgncP5BSo2d8yjOPNVdSxlU",
+  authDomain: "mealstogo-6f262.firebaseapp.com",
+  projectId: "mealstogo-6f262",
+  storageBucket: "mealstogo-6f262.firebasestorage.app",
+  messagingSenderId: "638810214616",
+  appId: "1:638810214616:web:6805da567c41c5f282c7ad",
 };
 
-const Settings = () => (
-  <SafeArea>
-    <Text>Settings</Text>
-  </SafeArea>
-);
-const Map = () => (
-  <SafeArea>
-    <Text>Map</Text>
-  </SafeArea>
-);
+if (!getApps().length) {
+  initializeApp(firebaseConfig);
+}
 
-const createScreenOptions = ({ route }) => {
-  const iconName = TAB_ICON[route.name];
-  return {
-    tabBarIcon: ({ size, color }) => (
-      <Ionicons name={iconName} size={size} color={color} />
-    ),
-  };
-};
+export const auth = getAuth();
 
 export default function App() {
   const [oswaldLoaded] = useOswald({
@@ -57,19 +44,9 @@ export default function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <Tab.Navigator
-            screenOptions={({ route }) => ({
-              ...createScreenOptions({ route }),
-              tabBarActiveTintColor: "tomato",
-              tabBarInactiveTintColor: "gray",
-            })}
-          >
-            <Tab.Screen name="Restaurants" component={RestaurantsScreen} />
-            <Tab.Screen name="Map" component={Map} />
-            <Tab.Screen name="Settings" component={Settings} />
-          </Tab.Navigator>
-        </NavigationContainer>
+        <AuthenticationContextProvider>
+          <Navigation />
+        </AuthenticationContextProvider>
       </ThemeProvider>
       <ExpoStatusBar style="auto" />
     </>
